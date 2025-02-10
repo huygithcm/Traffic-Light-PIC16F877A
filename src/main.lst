@@ -1,0 +1,1502 @@
+CCS PCM C Compiler, Version 5.112, 43599               17-Jul-24 11:47
+
+               Filename:   C:\Users\huybu\Desktop\fuvitech\CODE_SINH_VIEN_GUI\code_den_giao_thong\main.lst
+
+               ROM used:   1115 words (14%)
+                           Largest free fragment is 2048
+               RAM used:   18 (5%) at main() level
+                           23 (6%) worst case
+               Stack used: 2 locations (1 in main + 1 for interrupts)
+               Stack size: 8
+
+*
+0000:  MOVLW  04
+0001:  MOVWF  0A
+0002:  GOTO   407
+0003:  NOP
+0004:  MOVWF  7F
+0005:  SWAPF  03,W
+0006:  CLRF   03
+0007:  MOVWF  21
+0008:  MOVF   0A,W
+0009:  MOVWF  20
+000A:  CLRF   0A
+000B:  MOVF   04,W
+000C:  MOVWF  22
+000D:  MOVF   77,W
+000E:  MOVWF  23
+000F:  MOVF   78,W
+0010:  MOVWF  24
+0011:  MOVF   79,W
+0012:  MOVWF  25
+0013:  MOVF   7A,W
+0014:  MOVWF  26
+0015:  BCF    03.7
+0016:  BCF    03.5
+0017:  MOVLW  8C
+0018:  MOVWF  04
+0019:  BTFSS  00.0
+001A:  GOTO   01D
+001B:  BTFSC  0C.0
+001C:  GOTO   02E
+001D:  MOVF   22,W
+001E:  MOVWF  04
+001F:  MOVF   23,W
+0020:  MOVWF  77
+0021:  MOVF   24,W
+0022:  MOVWF  78
+0023:  MOVF   25,W
+0024:  MOVWF  79
+0025:  MOVF   26,W
+0026:  MOVWF  7A
+0027:  MOVF   20,W
+0028:  MOVWF  0A
+0029:  SWAPF  21,W
+002A:  MOVWF  03
+002B:  SWAPF  7F,F
+002C:  SWAPF  7F,W
+002D:  RETFIE
+002E:  BCF    0A.3
+002F:  BCF    0A.4
+0030:  GOTO   03F
+.................... #include <16f877a.h>
+.................... //////////// Standard Header file for the PIC16F877A device ////////////////
+.................... ///////////////////////////////////////////////////////////////////////////
+.................... ////        (C) Copyright 1996, 2020 Custom Computer Services          ////
+.................... //// This source code may only be used by licensed users of the CCS C  ////
+.................... //// compiler.  This source code may only be distributed to other      ////
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction ////
+.................... //// or distribution is permitted without written permission.          ////
+.................... //// Derivative programs created using this software in object code    ////
+.................... //// form are not restricted in any way.                               ////
+.................... ///////////////////////////////////////////////////////////////////////////
+.................... #device PIC16F877A
+0031:  BCF    0A.0
+0032:  BCF    0A.1
+0033:  BCF    0A.2
+0034:  ADDWF  02,F
+0035:  RETLW  C0
+0036:  RETLW  F9
+0037:  RETLW  A4
+0038:  RETLW  B0
+0039:  RETLW  99
+003A:  RETLW  92
+003B:  RETLW  82
+003C:  RETLW  F8
+003D:  RETLW  80
+003E:  RETLW  90
+*
+005A:  MOVF   30,W
+005B:  CLRF   78
+005C:  SUBWF  2F,W
+005D:  BTFSC  03.0
+005E:  GOTO   062
+005F:  MOVF   2F,W
+0060:  MOVWF  77
+0061:  GOTO   06E
+0062:  CLRF   77
+0063:  MOVLW  08
+0064:  MOVWF  31
+0065:  RLF    2F,F
+0066:  RLF    77,F
+0067:  MOVF   30,W
+0068:  SUBWF  77,W
+0069:  BTFSC  03.0
+006A:  MOVWF  77
+006B:  RLF    78,F
+006C:  DECFSZ 31,F
+006D:  GOTO   065
+006E:  RETURN
+.................... 
+.................... #list
+.................... 
+.................... #fuses HS,NOWDT,NOPROTECT,NOLVP
+.................... #use delay(clock=20M)
+006F:  MOVLW  2F
+0070:  MOVWF  04
+0071:  BCF    03.7
+0072:  MOVF   00,W
+0073:  BTFSC  03.2
+0074:  GOTO   082
+0075:  MOVLW  06
+0076:  MOVWF  78
+0077:  CLRF   77
+0078:  DECFSZ 77,F
+0079:  GOTO   078
+007A:  DECFSZ 78,F
+007B:  GOTO   077
+007C:  MOVLW  7B
+007D:  MOVWF  77
+007E:  DECFSZ 77,F
+007F:  GOTO   07E
+0080:  DECFSZ 00,F
+0081:  GOTO   075
+0082:  RETURN
+.................... #FUSES NOWDT, HS, NOPUT, NOPROTECT, NODEBUG, NOBROWNOUT, NOLVP, NOCPD, NOWRT
+.................... 
+.................... volatile int8 time =0;
+.................... volatile int8 time_cout =0;
+.................... int8 tt, reset_time;
+.................... const unsigned char led_7[10]={0xC0, 0xF9, 0xA4, 0xB0, 0x99, 0x92, 0x82,0xF8, 0x80, 0x90};
+.................... void send(int8 a);
+.................... 
+.................... #int_timer1  //
+.................... void ngat_timer()    // timer 1 say ra khi =65535 tuc tran, khi tran thi dat 100ms
+.................... {  
+....................       clear_interrupt(INT_TIMER1);           // khoi tao gia tri ban dau//
+*
+003F:  BCF    0C.0
+....................       set_timer1(3036);
+0040:  CLRF   0E
+0041:  MOVLW  0B
+0042:  MOVWF  0F
+0043:  MOVLW  DC
+0044:  MOVWF  0E
+0045:  NOP
+....................       time_cout = time_cout+1;
+0046:  MOVLW  01
+0047:  ADDWF  28,F
+.................... 
+....................       if(time_cout == 10) 
+0048:  MOVF   28,W
+0049:  SUBLW  0A
+004A:  BTFSS  03.2
+004B:  GOTO   04F
+....................       {
+....................          time_cout=0; 
+004C:  CLRF   28
+....................          time = time+1;
+004D:  MOVLW  01
+004E:  ADDWF  27,F
+....................       }
+....................       if(time == reset_time)
+004F:  MOVF   2A,W
+0050:  SUBWF  27,W
+0051:  BTFSC  03.2
+....................       { 
+....................          time = 0;
+0052:  CLRF   27
+....................       }
+....................       setup_timer_1(T1_INTERNAL|T1_DIV_BY_8);         // mo timer bo chia 8
+0053:  MOVLW  B5
+0054:  MOVWF  10
+....................       enable_interrupts(int_ext);                     // mo ngat ngoai
+0055:  BSF    0B.4
+0056:  BCF    0C.0
+0057:  BCF    0A.3
+0058:  BCF    0A.4
+0059:  GOTO   01D
+.................... }
+.................... 
+.................... void ban_dem()
+.................... {
+.................... output_high(pin_a0); // hang chuc
+*
+03B5:  BSF    03.5
+03B6:  BCF    05.0
+03B7:  BCF    03.5
+03B8:  BSF    05.0
+.................... output_high(pin_a1); // hang chuc
+03B9:  BSF    03.5
+03BA:  BCF    05.1
+03BB:  BCF    03.5
+03BC:  BSF    05.1
+.................... output_high(pin_a2); // hang chuc
+03BD:  BSF    03.5
+03BE:  BCF    05.2
+03BF:  BCF    03.5
+03C0:  BSF    05.2
+.................... output_high(pin_a3); // hang chuc
+03C1:  BSF    03.5
+03C2:  BCF    05.3
+03C3:  BCF    03.5
+03C4:  BSF    05.3
+.................... 
+....................       if(time == 1)
+03C5:  DECFSZ 27,W
+03C6:  GOTO   3E6
+....................       {
+....................             output_high(pin_b3);
+03C7:  BSF    03.5
+03C8:  BCF    06.3
+03C9:  BCF    03.5
+03CA:  BSF    06.3
+....................             output_high(pin_b5);
+03CB:  BSF    03.5
+03CC:  BCF    06.5
+03CD:  BCF    03.5
+03CE:  BSF    06.5
+....................             output_low(pin_b4);   
+03CF:  BSF    03.5
+03D0:  BCF    06.4
+03D1:  BCF    03.5
+03D2:  BCF    06.4
+....................     
+....................             
+....................             output_high(pin_c5);
+03D3:  BCF    2B.5
+03D4:  MOVF   2B,W
+03D5:  BSF    03.5
+03D6:  MOVWF  07
+03D7:  BCF    03.5
+03D8:  BSF    07.5
+....................             output_high(pin_c7);
+03D9:  BCF    2B.7
+03DA:  MOVF   2B,W
+03DB:  BSF    03.5
+03DC:  MOVWF  07
+03DD:  BCF    03.5
+03DE:  BSF    07.7
+....................             output_low(pin_c6);
+03DF:  BCF    2B.6
+03E0:  MOVF   2B,W
+03E1:  BSF    03.5
+03E2:  MOVWF  07
+03E3:  BCF    03.5
+03E4:  BCF    07.6
+....................       }
+03E5:  GOTO   3EA
+....................       else
+....................             output_high(pin_b3);
+03E6:  BSF    03.5
+03E7:  BCF    06.3
+03E8:  BCF    03.5
+03E9:  BSF    06.3
+....................             output_high(pin_b5);
+03EA:  BSF    03.5
+03EB:  BCF    06.5
+03EC:  BCF    03.5
+03ED:  BSF    06.5
+....................             output_high(pin_b4);   
+03EE:  BSF    03.5
+03EF:  BCF    06.4
+03F0:  BCF    03.5
+03F1:  BSF    06.4
+....................             
+....................             output_high(pin_c5);
+03F2:  BCF    2B.5
+03F3:  MOVF   2B,W
+03F4:  BSF    03.5
+03F5:  MOVWF  07
+03F6:  BCF    03.5
+03F7:  BSF    07.5
+....................             output_high(pin_c7);
+03F8:  BCF    2B.7
+03F9:  MOVF   2B,W
+03FA:  BSF    03.5
+03FB:  MOVWF  07
+03FC:  BCF    03.5
+03FD:  BSF    07.7
+....................             output_high(pin_c6); 
+03FE:  BCF    2B.6
+03FF:  MOVF   2B,W
+0400:  BSF    03.5
+0401:  MOVWF  07
+0402:  BCF    03.5
+0403:  BSF    07.6
+0404:  BCF    0A.3
+0405:  BCF    0A.4
+0406:  GOTO   459 (RETURN)
+.................... }
+.................... void bt() // ham chay khi nhan nut so 1 . 
+.................... {
+....................    int8 hc, hdv;
+....................    int8 timer;
+....................    
+....................    if(time >= 0 && time < 20)
+*
+0083:  MOVF   27,W
+0084:  SUBLW  13
+0085:  BTFSS  03.0
+0086:  GOTO   0CE
+....................    {
+....................       timer = 20 - time;
+0087:  MOVF   27,W
+0088:  SUBLW  14
+0089:  MOVWF  2E
+....................       output_high(pin_a1); // hang chuc
+008A:  BSF    03.5
+008B:  BCF    05.1
+008C:  BCF    03.5
+008D:  BSF    05.1
+....................       output_high(pin_a0); // hang chuc
+008E:  BSF    03.5
+008F:  BCF    05.0
+0090:  BCF    03.5
+0091:  BSF    05.0
+....................    
+....................       hc = timer / 10;
+0092:  MOVF   2E,W
+0093:  MOVWF  2F
+0094:  MOVLW  0A
+0095:  MOVWF  30
+0096:  CALL   05A
+0097:  MOVF   78,W
+0098:  MOVWF  2C
+....................       hdv = timer % 10;
+0099:  MOVF   2E,W
+009A:  MOVWF  2F
+009B:  MOVLW  0A
+009C:  MOVWF  30
+009D:  CALL   05A
+009E:  MOVF   77,W
+009F:  MOVWF  2D
+....................       
+....................       output_low(pin_a3); // hang don vi
+00A0:  BSF    03.5
+00A1:  BCF    05.3
+00A2:  BCF    03.5
+00A3:  BCF    05.3
+....................       output_high(pin_a2); // hang chuc
+00A4:  BSF    03.5
+00A5:  BCF    05.2
+00A6:  BCF    03.5
+00A7:  BSF    05.2
+....................       output_d(led_7[hdv]);
+00A8:  MOVF   2D,W
+00A9:  CALL   031
+00AA:  MOVWF  2F
+00AB:  BSF    03.5
+00AC:  CLRF   08
+00AD:  BCF    03.5
+00AE:  MOVF   2F,W
+00AF:  MOVWF  08
+....................       delay_ms(5);
+00B0:  MOVLW  05
+00B1:  MOVWF  2F
+00B2:  CALL   06F
+....................       output_low(pin_a2); // hang chuc
+00B3:  BSF    03.5
+00B4:  BCF    05.2
+00B5:  BCF    03.5
+00B6:  BCF    05.2
+....................       output_high(pin_a3); // hang don vi
+00B7:  BSF    03.5
+00B8:  BCF    05.3
+00B9:  BCF    03.5
+00BA:  BSF    05.3
+....................       output_d(led_7[hc]);
+00BB:  MOVF   2C,W
+00BC:  CALL   031
+00BD:  MOVWF  2F
+00BE:  BSF    03.5
+00BF:  CLRF   08
+00C0:  BCF    03.5
+00C1:  MOVF   2F,W
+00C2:  MOVWF  08
+....................       delay_ms(5);     
+00C3:  MOVLW  05
+00C4:  MOVWF  2F
+00C5:  CALL   06F
+....................       output_high(pin_a3); // hang don vi
+00C6:  BSF    03.5
+00C7:  BCF    05.3
+00C8:  BCF    03.5
+00C9:  BSF    05.3
+....................       output_high(pin_a2); // hang don vi 
+00CA:  BSF    03.5
+00CB:  BCF    05.2
+00CC:  BCF    03.5
+00CD:  BSF    05.2
+....................    }
+....................  
+....................     if(time >= 20 && time < 40)
+00CE:  MOVF   27,W
+00CF:  SUBLW  13
+00D0:  BTFSC  03.0
+00D1:  GOTO   11D
+00D2:  MOVF   27,W
+00D3:  SUBLW  27
+00D4:  BTFSS  03.0
+00D5:  GOTO   11D
+....................    {
+....................       timer = 40 - time;
+00D6:  MOVF   27,W
+00D7:  SUBLW  28
+00D8:  MOVWF  2E
+....................       output_high(pin_a1); // hang chuc
+00D9:  BSF    03.5
+00DA:  BCF    05.1
+00DB:  BCF    03.5
+00DC:  BSF    05.1
+....................       output_high(pin_a0); // hang chuc
+00DD:  BSF    03.5
+00DE:  BCF    05.0
+00DF:  BCF    03.5
+00E0:  BSF    05.0
+....................  
+....................       hc = timer / 10;
+00E1:  MOVF   2E,W
+00E2:  MOVWF  2F
+00E3:  MOVLW  0A
+00E4:  MOVWF  30
+00E5:  CALL   05A
+00E6:  MOVF   78,W
+00E7:  MOVWF  2C
+....................       hdv = timer % 10;
+00E8:  MOVF   2E,W
+00E9:  MOVWF  2F
+00EA:  MOVLW  0A
+00EB:  MOVWF  30
+00EC:  CALL   05A
+00ED:  MOVF   77,W
+00EE:  MOVWF  2D
+....................    
+....................       output_low(pin_a3); // hang don vi
+00EF:  BSF    03.5
+00F0:  BCF    05.3
+00F1:  BCF    03.5
+00F2:  BCF    05.3
+....................       output_high(pin_a2); // hang chuc
+00F3:  BSF    03.5
+00F4:  BCF    05.2
+00F5:  BCF    03.5
+00F6:  BSF    05.2
+....................       output_d(led_7[hdv]);
+00F7:  MOVF   2D,W
+00F8:  CALL   031
+00F9:  MOVWF  2F
+00FA:  BSF    03.5
+00FB:  CLRF   08
+00FC:  BCF    03.5
+00FD:  MOVF   2F,W
+00FE:  MOVWF  08
+....................       delay_ms(5);
+00FF:  MOVLW  05
+0100:  MOVWF  2F
+0101:  CALL   06F
+....................       output_low(pin_a2); // hang chuc
+0102:  BSF    03.5
+0103:  BCF    05.2
+0104:  BCF    03.5
+0105:  BCF    05.2
+....................       output_high(pin_a3); // hang don vi
+0106:  BSF    03.5
+0107:  BCF    05.3
+0108:  BCF    03.5
+0109:  BSF    05.3
+....................       output_d(led_7[hc]);
+010A:  MOVF   2C,W
+010B:  CALL   031
+010C:  MOVWF  2F
+010D:  BSF    03.5
+010E:  CLRF   08
+010F:  BCF    03.5
+0110:  MOVF   2F,W
+0111:  MOVWF  08
+....................       delay_ms(5);     
+0112:  MOVLW  05
+0113:  MOVWF  2F
+0114:  CALL   06F
+....................       output_high(pin_a3); // hang don vi
+0115:  BSF    03.5
+0116:  BCF    05.3
+0117:  BCF    03.5
+0118:  BSF    05.3
+....................       output_high(pin_a2); // hang don vi
+0119:  BSF    03.5
+011A:  BCF    05.2
+011B:  BCF    03.5
+011C:  BSF    05.2
+....................    }
+....................    
+....................    if(time >= 0 && time < 20)
+011D:  MOVF   27,W
+011E:  SUBLW  13
+011F:  BTFSS  03.0
+0120:  GOTO   1A0
+....................    {
+....................       timer = 20 - time;
+0121:  MOVF   27,W
+0122:  SUBLW  14
+0123:  MOVWF  2E
+....................       hc = timer / 10;
+0124:  MOVF   2E,W
+0125:  MOVWF  2F
+0126:  MOVLW  0A
+0127:  MOVWF  30
+0128:  CALL   05A
+0129:  MOVF   78,W
+012A:  MOVWF  2C
+....................       hdv = timer % 10;
+012B:  MOVF   2E,W
+012C:  MOVWF  2F
+012D:  MOVLW  0A
+012E:  MOVWF  30
+012F:  CALL   05A
+0130:  MOVF   77,W
+0131:  MOVWF  2D
+....................       output_low(pin_a0); // hang don vi
+0132:  BSF    03.5
+0133:  BCF    05.0
+0134:  BCF    03.5
+0135:  BCF    05.0
+....................       output_high(pin_a1); // hang chuc
+0136:  BSF    03.5
+0137:  BCF    05.1
+0138:  BCF    03.5
+0139:  BSF    05.1
+....................       output_d(led_7[hdv]);
+013A:  MOVF   2D,W
+013B:  CALL   031
+013C:  MOVWF  2F
+013D:  BSF    03.5
+013E:  CLRF   08
+013F:  BCF    03.5
+0140:  MOVF   2F,W
+0141:  MOVWF  08
+....................       delay_ms(5);
+0142:  MOVLW  05
+0143:  MOVWF  2F
+0144:  CALL   06F
+....................       output_low(pin_a1); // hang chuc
+0145:  BSF    03.5
+0146:  BCF    05.1
+0147:  BCF    03.5
+0148:  BCF    05.1
+....................       output_high(pin_a0); // hang don vi
+0149:  BSF    03.5
+014A:  BCF    05.0
+014B:  BCF    03.5
+014C:  BSF    05.0
+....................       output_d(led_7[hc]);
+014D:  MOVF   2C,W
+014E:  CALL   031
+014F:  MOVWF  2F
+0150:  BSF    03.5
+0151:  CLRF   08
+0152:  BCF    03.5
+0153:  MOVF   2F,W
+0154:  MOVWF  08
+....................       delay_ms(5);
+0155:  MOVLW  05
+0156:  MOVWF  2F
+0157:  CALL   06F
+....................       
+....................      if(time >= 17 && time < 20)
+0158:  MOVF   27,W
+0159:  SUBLW  10
+015A:  BTFSC  03.0
+015B:  GOTO   17E
+015C:  MOVF   27,W
+015D:  SUBLW  13
+015E:  BTFSS  03.0
+015F:  GOTO   17E
+....................      {
+....................             output_high(pin_b3);
+0160:  BSF    03.5
+0161:  BCF    06.3
+0162:  BCF    03.5
+0163:  BSF    06.3
+....................             output_high(pin_b4);
+0164:  BSF    03.5
+0165:  BCF    06.4
+0166:  BCF    03.5
+0167:  BSF    06.4
+....................             output_low(pin_b5);
+0168:  BSF    03.5
+0169:  BCF    06.5
+016A:  BCF    03.5
+016B:  BCF    06.5
+....................             
+....................             output_high(pin_c5);
+016C:  BCF    2B.5
+016D:  MOVF   2B,W
+016E:  BSF    03.5
+016F:  MOVWF  07
+0170:  BCF    03.5
+0171:  BSF    07.5
+....................             output_high(pin_c7);
+0172:  BCF    2B.7
+0173:  MOVF   2B,W
+0174:  BSF    03.5
+0175:  MOVWF  07
+0176:  BCF    03.5
+0177:  BSF    07.7
+....................             output_low(pin_c6);
+0178:  BCF    2B.6
+0179:  MOVF   2B,W
+017A:  BSF    03.5
+017B:  MOVWF  07
+017C:  BCF    03.5
+017D:  BCF    07.6
+....................      }
+....................       if(time >= 0 && time < 17)
+017E:  MOVF   27,W
+017F:  SUBLW  10
+0180:  BTFSS  03.0
+0181:  GOTO   1A0
+.................... 
+....................      {
+....................          output_high(pin_c7);
+0182:  BCF    2B.7
+0183:  MOVF   2B,W
+0184:  BSF    03.5
+0185:  MOVWF  07
+0186:  BCF    03.5
+0187:  BSF    07.7
+....................          output_high(pin_c6);
+0188:  BCF    2B.6
+0189:  MOVF   2B,W
+018A:  BSF    03.5
+018B:  MOVWF  07
+018C:  BCF    03.5
+018D:  BSF    07.6
+....................          output_low(pin_c5);
+018E:  BCF    2B.5
+018F:  MOVF   2B,W
+0190:  BSF    03.5
+0191:  MOVWF  07
+0192:  BCF    03.5
+0193:  BCF    07.5
+....................          
+....................          output_high(pin_b3);
+0194:  BSF    03.5
+0195:  BCF    06.3
+0196:  BCF    03.5
+0197:  BSF    06.3
+....................          output_high(pin_b4);
+0198:  BSF    03.5
+0199:  BCF    06.4
+019A:  BCF    03.5
+019B:  BSF    06.4
+....................          output_low(pin_b5);
+019C:  BSF    03.5
+019D:  BCF    06.5
+019E:  BCF    03.5
+019F:  BCF    06.5
+....................       }
+....................  }
+....................    
+....................    if(time >= 20 && time < 40)
+01A0:  MOVF   27,W
+01A1:  SUBLW  13
+01A2:  BTFSC  03.0
+01A3:  GOTO   219
+01A4:  MOVF   27,W
+01A5:  SUBLW  27
+01A6:  BTFSS  03.0
+01A7:  GOTO   219
+....................    {
+....................       timer = 40 - time;
+01A8:  MOVF   27,W
+01A9:  SUBLW  28
+01AA:  MOVWF  2E
+....................       hc = timer / 10;
+01AB:  MOVF   2E,W
+01AC:  MOVWF  2F
+01AD:  MOVLW  0A
+01AE:  MOVWF  30
+01AF:  CALL   05A
+01B0:  MOVF   78,W
+01B1:  MOVWF  2C
+....................       hdv = timer % 10;
+01B2:  MOVF   2E,W
+01B3:  MOVWF  2F
+01B4:  MOVLW  0A
+01B5:  MOVWF  30
+01B6:  CALL   05A
+01B7:  MOVF   77,W
+01B8:  MOVWF  2D
+....................       
+....................       output_high(pin_a1); // hang don vi
+01B9:  BSF    03.5
+01BA:  BCF    05.1
+01BB:  BCF    03.5
+01BC:  BSF    05.1
+....................       output_low(pin_a0); // hang don vi
+01BD:  BSF    03.5
+01BE:  BCF    05.0
+01BF:  BCF    03.5
+01C0:  BCF    05.0
+....................       output_d(led_7[hdv]);
+01C1:  MOVF   2D,W
+01C2:  CALL   031
+01C3:  MOVWF  2F
+01C4:  BSF    03.5
+01C5:  CLRF   08
+01C6:  BCF    03.5
+01C7:  MOVF   2F,W
+01C8:  MOVWF  08
+....................       delay_ms(5);
+01C9:  MOVLW  05
+01CA:  MOVWF  2F
+01CB:  CALL   06F
+....................       output_low(pin_a1); // hang chuc
+01CC:  BSF    03.5
+01CD:  BCF    05.1
+01CE:  BCF    03.5
+01CF:  BCF    05.1
+....................       output_high(pin_a0); // hang don vi
+01D0:  BSF    03.5
+01D1:  BCF    05.0
+01D2:  BCF    03.5
+01D3:  BSF    05.0
+....................       output_d(led_7[hc]);
+01D4:  MOVF   2C,W
+01D5:  CALL   031
+01D6:  MOVWF  2F
+01D7:  BSF    03.5
+01D8:  CLRF   08
+01D9:  BCF    03.5
+01DA:  MOVF   2F,W
+01DB:  MOVWF  08
+....................       delay_ms(5);
+01DC:  MOVLW  05
+01DD:  MOVWF  2F
+01DE:  CALL   06F
+....................      
+....................       output_high(pin_c5);
+01DF:  BCF    2B.5
+01E0:  MOVF   2B,W
+01E1:  BSF    03.5
+01E2:  MOVWF  07
+01E3:  BCF    03.5
+01E4:  BSF    07.5
+....................       output_high(pin_c6);
+01E5:  BCF    2B.6
+01E6:  MOVF   2B,W
+01E7:  BSF    03.5
+01E8:  MOVWF  07
+01E9:  BCF    03.5
+01EA:  BSF    07.6
+....................       output_low(pin_c7);
+01EB:  BCF    2B.7
+01EC:  MOVF   2B,W
+01ED:  BSF    03.5
+01EE:  MOVWF  07
+01EF:  BCF    03.5
+01F0:  BCF    07.7
+....................       
+....................     if(time >= 20 && time < 37)
+01F1:  MOVF   27,W
+01F2:  SUBLW  13
+01F3:  BTFSC  03.0
+01F4:  GOTO   205
+01F5:  MOVF   27,W
+01F6:  SUBLW  24
+01F7:  BTFSS  03.0
+01F8:  GOTO   205
+....................      {
+....................          output_high(pin_b4);
+01F9:  BSF    03.5
+01FA:  BCF    06.4
+01FB:  BCF    03.5
+01FC:  BSF    06.4
+....................          output_high(pin_b5);
+01FD:  BSF    03.5
+01FE:  BCF    06.5
+01FF:  BCF    03.5
+0200:  BSF    06.5
+....................          output_low(pin_b3);
+0201:  BSF    03.5
+0202:  BCF    06.3
+0203:  BCF    03.5
+0204:  BCF    06.3
+....................       }
+....................       if(time >= 37 && time < 40)
+0205:  MOVF   27,W
+0206:  SUBLW  24
+0207:  BTFSC  03.0
+0208:  GOTO   219
+0209:  MOVF   27,W
+020A:  SUBLW  27
+020B:  BTFSS  03.0
+020C:  GOTO   219
+....................      {
+....................          output_high(pin_b3);
+020D:  BSF    03.5
+020E:  BCF    06.3
+020F:  BCF    03.5
+0210:  BSF    06.3
+....................          output_high(pin_b5);
+0211:  BSF    03.5
+0212:  BCF    06.5
+0213:  BCF    03.5
+0214:  BSF    06.5
+....................          output_low(pin_b4);
+0215:  BSF    03.5
+0216:  BCF    06.4
+0217:  BCF    03.5
+0218:  BCF    06.4
+....................      }
+....................      
+....................    }
+0219:  BCF    0A.3
+021A:  BCF    0A.4
+021B:  GOTO   451 (RETURN)
+.................... }
+....................  void dd()
+.................... {
+....................    int8 hc, hdv;
+....................    int8 timer;
+....................    
+....................    if(time >= 0 && time < 30)
+021C:  MOVF   27,W
+021D:  SUBLW  1D
+021E:  BTFSS  03.0
+021F:  GOTO   267
+....................    {
+....................       timer = 30 - time;
+0220:  MOVF   27,W
+0221:  SUBLW  1E
+0222:  MOVWF  2E
+....................       output_high(pin_a1); // hang chuc
+0223:  BSF    03.5
+0224:  BCF    05.1
+0225:  BCF    03.5
+0226:  BSF    05.1
+....................       output_high(pin_a0); // hang chuc
+0227:  BSF    03.5
+0228:  BCF    05.0
+0229:  BCF    03.5
+022A:  BSF    05.0
+....................    
+....................       hc = timer / 10;
+022B:  MOVF   2E,W
+022C:  MOVWF  2F
+022D:  MOVLW  0A
+022E:  MOVWF  30
+022F:  CALL   05A
+0230:  MOVF   78,W
+0231:  MOVWF  2C
+....................       hdv = timer % 10;
+0232:  MOVF   2E,W
+0233:  MOVWF  2F
+0234:  MOVLW  0A
+0235:  MOVWF  30
+0236:  CALL   05A
+0237:  MOVF   77,W
+0238:  MOVWF  2D
+....................       
+....................       output_low(pin_a3); // hang don vi
+0239:  BSF    03.5
+023A:  BCF    05.3
+023B:  BCF    03.5
+023C:  BCF    05.3
+....................       output_high(pin_a2); // hang chuc
+023D:  BSF    03.5
+023E:  BCF    05.2
+023F:  BCF    03.5
+0240:  BSF    05.2
+....................       output_d(led_7[hdv]);
+0241:  MOVF   2D,W
+0242:  CALL   031
+0243:  MOVWF  2F
+0244:  BSF    03.5
+0245:  CLRF   08
+0246:  BCF    03.5
+0247:  MOVF   2F,W
+0248:  MOVWF  08
+....................       delay_ms(5);
+0249:  MOVLW  05
+024A:  MOVWF  2F
+024B:  CALL   06F
+....................       output_low(pin_a2); // hang chuc
+024C:  BSF    03.5
+024D:  BCF    05.2
+024E:  BCF    03.5
+024F:  BCF    05.2
+....................       output_high(pin_a3); // hang don vi
+0250:  BSF    03.5
+0251:  BCF    05.3
+0252:  BCF    03.5
+0253:  BSF    05.3
+....................       output_d(led_7[hc]);
+0254:  MOVF   2C,W
+0255:  CALL   031
+0256:  MOVWF  2F
+0257:  BSF    03.5
+0258:  CLRF   08
+0259:  BCF    03.5
+025A:  MOVF   2F,W
+025B:  MOVWF  08
+....................       delay_ms(5);     
+025C:  MOVLW  05
+025D:  MOVWF  2F
+025E:  CALL   06F
+....................       output_high(pin_a3); // hang don vi
+025F:  BSF    03.5
+0260:  BCF    05.3
+0261:  BCF    03.5
+0262:  BSF    05.3
+....................       output_high(pin_a2); // hang don vi 
+0263:  BSF    03.5
+0264:  BCF    05.2
+0265:  BCF    03.5
+0266:  BSF    05.2
+....................    }
+....................  
+....................     if(time >= 30 && time < 60)
+0267:  MOVF   27,W
+0268:  SUBLW  1D
+0269:  BTFSC  03.0
+026A:  GOTO   2B6
+026B:  MOVF   27,W
+026C:  SUBLW  3B
+026D:  BTFSS  03.0
+026E:  GOTO   2B6
+....................    {
+....................       timer = 60 - time;
+026F:  MOVF   27,W
+0270:  SUBLW  3C
+0271:  MOVWF  2E
+....................       output_high(pin_a1); // hang chuc
+0272:  BSF    03.5
+0273:  BCF    05.1
+0274:  BCF    03.5
+0275:  BSF    05.1
+....................       output_high(pin_a0); // hang chuc
+0276:  BSF    03.5
+0277:  BCF    05.0
+0278:  BCF    03.5
+0279:  BSF    05.0
+....................  
+....................       hc = timer / 10;
+027A:  MOVF   2E,W
+027B:  MOVWF  2F
+027C:  MOVLW  0A
+027D:  MOVWF  30
+027E:  CALL   05A
+027F:  MOVF   78,W
+0280:  MOVWF  2C
+....................       hdv = timer % 10;
+0281:  MOVF   2E,W
+0282:  MOVWF  2F
+0283:  MOVLW  0A
+0284:  MOVWF  30
+0285:  CALL   05A
+0286:  MOVF   77,W
+0287:  MOVWF  2D
+....................    
+....................       output_low(pin_a3); // hang don vi
+0288:  BSF    03.5
+0289:  BCF    05.3
+028A:  BCF    03.5
+028B:  BCF    05.3
+....................       output_high(pin_a2); // hang chuc
+028C:  BSF    03.5
+028D:  BCF    05.2
+028E:  BCF    03.5
+028F:  BSF    05.2
+....................       output_d(led_7[hdv]);
+0290:  MOVF   2D,W
+0291:  CALL   031
+0292:  MOVWF  2F
+0293:  BSF    03.5
+0294:  CLRF   08
+0295:  BCF    03.5
+0296:  MOVF   2F,W
+0297:  MOVWF  08
+....................       delay_ms(5);
+0298:  MOVLW  05
+0299:  MOVWF  2F
+029A:  CALL   06F
+....................       output_low(pin_a2); // hang chuc
+029B:  BSF    03.5
+029C:  BCF    05.2
+029D:  BCF    03.5
+029E:  BCF    05.2
+....................       output_high(pin_a3); // hang don vi
+029F:  BSF    03.5
+02A0:  BCF    05.3
+02A1:  BCF    03.5
+02A2:  BSF    05.3
+....................       output_d(led_7[hc]);
+02A3:  MOVF   2C,W
+02A4:  CALL   031
+02A5:  MOVWF  2F
+02A6:  BSF    03.5
+02A7:  CLRF   08
+02A8:  BCF    03.5
+02A9:  MOVF   2F,W
+02AA:  MOVWF  08
+....................       delay_ms(5);     
+02AB:  MOVLW  05
+02AC:  MOVWF  2F
+02AD:  CALL   06F
+....................       output_high(pin_a3); // hang don vi
+02AE:  BSF    03.5
+02AF:  BCF    05.3
+02B0:  BCF    03.5
+02B1:  BSF    05.3
+....................       output_high(pin_a2); // hang don vi
+02B2:  BSF    03.5
+02B3:  BCF    05.2
+02B4:  BCF    03.5
+02B5:  BSF    05.2
+.................... 
+....................    }
+....................    
+....................    if(time >= 0 && time < 30)
+02B6:  MOVF   27,W
+02B7:  SUBLW  1D
+02B8:  BTFSS  03.0
+02B9:  GOTO   339
+....................    {
+....................       timer = 30 - time;
+02BA:  MOVF   27,W
+02BB:  SUBLW  1E
+02BC:  MOVWF  2E
+....................       hc = timer / 10;
+02BD:  MOVF   2E,W
+02BE:  MOVWF  2F
+02BF:  MOVLW  0A
+02C0:  MOVWF  30
+02C1:  CALL   05A
+02C2:  MOVF   78,W
+02C3:  MOVWF  2C
+....................       hdv = timer % 10;
+02C4:  MOVF   2E,W
+02C5:  MOVWF  2F
+02C6:  MOVLW  0A
+02C7:  MOVWF  30
+02C8:  CALL   05A
+02C9:  MOVF   77,W
+02CA:  MOVWF  2D
+....................       output_low(pin_a0); // hang don vi
+02CB:  BSF    03.5
+02CC:  BCF    05.0
+02CD:  BCF    03.5
+02CE:  BCF    05.0
+....................       output_high(pin_a1); // hang chuc
+02CF:  BSF    03.5
+02D0:  BCF    05.1
+02D1:  BCF    03.5
+02D2:  BSF    05.1
+....................       output_d(led_7[hdv]);
+02D3:  MOVF   2D,W
+02D4:  CALL   031
+02D5:  MOVWF  2F
+02D6:  BSF    03.5
+02D7:  CLRF   08
+02D8:  BCF    03.5
+02D9:  MOVF   2F,W
+02DA:  MOVWF  08
+....................       delay_ms(5);
+02DB:  MOVLW  05
+02DC:  MOVWF  2F
+02DD:  CALL   06F
+....................       output_low(pin_a1); // hang chuc
+02DE:  BSF    03.5
+02DF:  BCF    05.1
+02E0:  BCF    03.5
+02E1:  BCF    05.1
+....................       output_high(pin_a0); // hang don vi
+02E2:  BSF    03.5
+02E3:  BCF    05.0
+02E4:  BCF    03.5
+02E5:  BSF    05.0
+....................       output_d(led_7[hc]);
+02E6:  MOVF   2C,W
+02E7:  CALL   031
+02E8:  MOVWF  2F
+02E9:  BSF    03.5
+02EA:  CLRF   08
+02EB:  BCF    03.5
+02EC:  MOVF   2F,W
+02ED:  MOVWF  08
+....................       delay_ms(5);
+02EE:  MOVLW  05
+02EF:  MOVWF  2F
+02F0:  CALL   06F
+....................       
+....................      if(time >= 27 && time < 30)
+02F1:  MOVF   27,W
+02F2:  SUBLW  1A
+02F3:  BTFSC  03.0
+02F4:  GOTO   317
+02F5:  MOVF   27,W
+02F6:  SUBLW  1D
+02F7:  BTFSS  03.0
+02F8:  GOTO   317
+....................      {
+....................             output_high(pin_b3);
+02F9:  BSF    03.5
+02FA:  BCF    06.3
+02FB:  BCF    03.5
+02FC:  BSF    06.3
+....................             output_high(pin_b4);
+02FD:  BSF    03.5
+02FE:  BCF    06.4
+02FF:  BCF    03.5
+0300:  BSF    06.4
+....................             output_low(pin_b5);
+0301:  BSF    03.5
+0302:  BCF    06.5
+0303:  BCF    03.5
+0304:  BCF    06.5
+....................             
+....................             output_high(pin_c5);
+0305:  BCF    2B.5
+0306:  MOVF   2B,W
+0307:  BSF    03.5
+0308:  MOVWF  07
+0309:  BCF    03.5
+030A:  BSF    07.5
+....................             output_high(pin_c7);
+030B:  BCF    2B.7
+030C:  MOVF   2B,W
+030D:  BSF    03.5
+030E:  MOVWF  07
+030F:  BCF    03.5
+0310:  BSF    07.7
+....................             output_low(pin_c6);
+0311:  BCF    2B.6
+0312:  MOVF   2B,W
+0313:  BSF    03.5
+0314:  MOVWF  07
+0315:  BCF    03.5
+0316:  BCF    07.6
+....................       }
+....................       if(time >= 0 && time < 27)
+0317:  MOVF   27,W
+0318:  SUBLW  1A
+0319:  BTFSS  03.0
+031A:  GOTO   339
+....................      {
+....................          output_high(pin_c7);
+031B:  BCF    2B.7
+031C:  MOVF   2B,W
+031D:  BSF    03.5
+031E:  MOVWF  07
+031F:  BCF    03.5
+0320:  BSF    07.7
+....................          output_high(pin_c6);
+0321:  BCF    2B.6
+0322:  MOVF   2B,W
+0323:  BSF    03.5
+0324:  MOVWF  07
+0325:  BCF    03.5
+0326:  BSF    07.6
+....................          output_low(pin_c5);
+0327:  BCF    2B.5
+0328:  MOVF   2B,W
+0329:  BSF    03.5
+032A:  MOVWF  07
+032B:  BCF    03.5
+032C:  BCF    07.5
+....................          
+....................          output_high(pin_b3);
+032D:  BSF    03.5
+032E:  BCF    06.3
+032F:  BCF    03.5
+0330:  BSF    06.3
+....................          output_high(pin_b4);
+0331:  BSF    03.5
+0332:  BCF    06.4
+0333:  BCF    03.5
+0334:  BSF    06.4
+....................          output_low(pin_b5);
+0335:  BSF    03.5
+0336:  BCF    06.5
+0337:  BCF    03.5
+0338:  BCF    06.5
+....................      }
+....................  }
+....................    
+....................    if(time >= 30 && time < 60)
+0339:  MOVF   27,W
+033A:  SUBLW  1D
+033B:  BTFSC  03.0
+033C:  GOTO   3B2
+033D:  MOVF   27,W
+033E:  SUBLW  3B
+033F:  BTFSS  03.0
+0340:  GOTO   3B2
+....................    {
+....................       timer = 60 - time;
+0341:  MOVF   27,W
+0342:  SUBLW  3C
+0343:  MOVWF  2E
+....................       hc = timer / 10;
+0344:  MOVF   2E,W
+0345:  MOVWF  2F
+0346:  MOVLW  0A
+0347:  MOVWF  30
+0348:  CALL   05A
+0349:  MOVF   78,W
+034A:  MOVWF  2C
+....................       hdv = timer % 10;
+034B:  MOVF   2E,W
+034C:  MOVWF  2F
+034D:  MOVLW  0A
+034E:  MOVWF  30
+034F:  CALL   05A
+0350:  MOVF   77,W
+0351:  MOVWF  2D
+....................       
+....................       output_high(pin_a1); // hang don vi
+0352:  BSF    03.5
+0353:  BCF    05.1
+0354:  BCF    03.5
+0355:  BSF    05.1
+....................       output_low(pin_a0); // hang don vi
+0356:  BSF    03.5
+0357:  BCF    05.0
+0358:  BCF    03.5
+0359:  BCF    05.0
+....................       output_d(led_7[hdv]);
+035A:  MOVF   2D,W
+035B:  CALL   031
+035C:  MOVWF  2F
+035D:  BSF    03.5
+035E:  CLRF   08
+035F:  BCF    03.5
+0360:  MOVF   2F,W
+0361:  MOVWF  08
+....................       delay_ms(5);
+0362:  MOVLW  05
+0363:  MOVWF  2F
+0364:  CALL   06F
+....................       output_low(pin_a1); // hang chuc
+0365:  BSF    03.5
+0366:  BCF    05.1
+0367:  BCF    03.5
+0368:  BCF    05.1
+....................       output_high(pin_a0); // hang don vi
+0369:  BSF    03.5
+036A:  BCF    05.0
+036B:  BCF    03.5
+036C:  BSF    05.0
+....................       output_d(led_7[hc]);
+036D:  MOVF   2C,W
+036E:  CALL   031
+036F:  MOVWF  2F
+0370:  BSF    03.5
+0371:  CLRF   08
+0372:  BCF    03.5
+0373:  MOVF   2F,W
+0374:  MOVWF  08
+....................       delay_ms(5);
+0375:  MOVLW  05
+0376:  MOVWF  2F
+0377:  CALL   06F
+....................      
+....................       output_high(pin_c5);
+0378:  BCF    2B.5
+0379:  MOVF   2B,W
+037A:  BSF    03.5
+037B:  MOVWF  07
+037C:  BCF    03.5
+037D:  BSF    07.5
+....................       output_high(pin_c6);
+037E:  BCF    2B.6
+037F:  MOVF   2B,W
+0380:  BSF    03.5
+0381:  MOVWF  07
+0382:  BCF    03.5
+0383:  BSF    07.6
+....................       output_low(pin_c7);
+0384:  BCF    2B.7
+0385:  MOVF   2B,W
+0386:  BSF    03.5
+0387:  MOVWF  07
+0388:  BCF    03.5
+0389:  BCF    07.7
+....................       
+....................     if(time >= 30 && time < 57)
+038A:  MOVF   27,W
+038B:  SUBLW  1D
+038C:  BTFSC  03.0
+038D:  GOTO   39E
+038E:  MOVF   27,W
+038F:  SUBLW  38
+0390:  BTFSS  03.0
+0391:  GOTO   39E
+....................      {
+....................          output_high(pin_b4);
+0392:  BSF    03.5
+0393:  BCF    06.4
+0394:  BCF    03.5
+0395:  BSF    06.4
+....................          output_high(pin_b5);
+0396:  BSF    03.5
+0397:  BCF    06.5
+0398:  BCF    03.5
+0399:  BSF    06.5
+....................          output_low(pin_b3);
+039A:  BSF    03.5
+039B:  BCF    06.3
+039C:  BCF    03.5
+039D:  BCF    06.3
+....................       }
+....................       if(time >= 57 && time < 60)
+039E:  MOVF   27,W
+039F:  SUBLW  38
+03A0:  BTFSC  03.0
+03A1:  GOTO   3B2
+03A2:  MOVF   27,W
+03A3:  SUBLW  3B
+03A4:  BTFSS  03.0
+03A5:  GOTO   3B2
+....................      {
+....................          output_high(pin_b3);
+03A6:  BSF    03.5
+03A7:  BCF    06.3
+03A8:  BCF    03.5
+03A9:  BSF    06.3
+....................          output_high(pin_b5);
+03AA:  BSF    03.5
+03AB:  BCF    06.5
+03AC:  BCF    03.5
+03AD:  BSF    06.5
+....................          output_low(pin_b4);
+03AE:  BSF    03.5
+03AF:  BCF    06.4
+03B0:  BCF    03.5
+03B1:  BCF    06.4
+....................      }
+....................      
+....................    }
+03B2:  BCF    0A.3
+03B3:  BCF    0A.4
+03B4:  GOTO   455 (RETURN)
+.................... }
+.................... 
+.................... void main()
+*
+0407:  MOVF   03,W
+0408:  ANDLW  1F
+0409:  MOVWF  03
+040A:  CLRF   27
+040B:  CLRF   28
+040C:  MOVLW  FF
+040D:  MOVWF  2B
+040E:  BSF    03.5
+040F:  BSF    1F.0
+0410:  BSF    1F.1
+0411:  BSF    1F.2
+0412:  BCF    1F.3
+0413:  MOVLW  07
+0414:  MOVWF  1C
+0415:  BCF    03.7
+.................... {
+....................    set_tris_c(0x00);//
+0416:  MOVLW  00
+0417:  MOVWF  07
+0418:  BCF    03.5
+0419:  MOVWF  2B
+....................    set_tris_d(0x00);//
+041A:  BSF    03.5
+041B:  MOVWF  08
+....................    Set_tris_a(0x00);//
+041C:  MOVWF  05
+....................    Set_tris_b(0x00);//
+041D:  MOVWF  06
+.................... 
+....................    setup_timer_1 ( T1_INTERNAL | T1_DIV_BY_8 ); // Internal clock and prescaler 8
+041E:  MOVLW  B5
+041F:  BCF    03.5
+0420:  MOVWF  10
+....................    set_timer1(3036);                            // Preload value 
+0421:  CLRF   0E
+0422:  MOVLW  0B
+0423:  MOVWF  0F
+0424:  MOVLW  DC
+0425:  MOVWF  0E
+0426:  NOP
+....................    clear_interrupt(INT_TIMER1);                 // Clear Timer1 interrupt flag bit
+0427:  BCF    0C.0
+....................    enable_interrupts(INT_TIMER1);               // Enable Timer1 interrupt
+0428:  BSF    03.5
+0429:  BSF    0C.0
+....................    enable_interrupts(GLOBAL);                   // Enable global interrupts
+042A:  MOVLW  C0
+042B:  BCF    03.5
+042C:  IORWF  0B,F
+.................... 
+.................... 
+.................... //!     time_cout =0;
+.................... //!     time =0;
+.................... //!     reset_time = 40;
+.................... 
+....................     while(true) 
+....................     {  
+....................      if(input(pin_e1)==0)
+042D:  BSF    03.5
+042E:  BSF    09.1
+042F:  BCF    03.5
+0430:  BTFSC  09.1
+0431:  GOTO   438
+....................      {
+....................        tt =1;
+0432:  MOVLW  01
+0433:  MOVWF  29
+....................        time_cout =0;
+0434:  CLRF   28
+....................        time =0;
+0435:  CLRF   27
+....................        reset_time = 40;
+0436:  MOVLW  28
+0437:  MOVWF  2A
+....................      }     
+....................           if(input(pin_e0)==0) 
+0438:  BSF    03.5
+0439:  BSF    09.0
+043A:  BCF    03.5
+043B:  BTFSC  09.0
+043C:  GOTO   443
+....................       {
+....................              tt =2;
+043D:  MOVLW  02
+043E:  MOVWF  29
+....................              time_cout =0;
+043F:  CLRF   28
+....................              time =0;
+0440:  CLRF   27
+....................              reset_time = 60;
+0441:  MOVLW  3C
+0442:  MOVWF  2A
+....................       }
+....................           if(input(pin_e2)==0)
+0443:  BSF    03.5
+0444:  BSF    09.2
+0445:  BCF    03.5
+0446:  BTFSC  09.2
+0447:  GOTO   44E
+....................      {
+....................             tt =3;
+0448:  MOVLW  03
+0449:  MOVWF  29
+....................             time_cout =0;
+044A:  CLRF   28
+....................             time =0;
+044B:  CLRF   27
+....................             reset_time = 2;
+044C:  MOVLW  02
+044D:  MOVWF  2A
+....................       }
+....................           
+....................           if(tt == 1) 
+044E:  DECFSZ 29,W
+044F:  GOTO   451
+....................           {
+....................             bt(); 
+0450:  GOTO   083
+....................           }
+....................           
+....................             if(tt == 2) 
+0451:  MOVF   29,W
+0452:  SUBLW  02
+0453:  BTFSC  03.2
+....................           {
+....................             dd(); 
+0454:  GOTO   21C
+....................           }
+....................              if(tt == 3) 
+0455:  MOVF   29,W
+0456:  SUBLW  03
+0457:  BTFSC  03.2
+....................           {
+....................             ban_dem(); 
+0458:  GOTO   3B5
+....................           }
+0459:  GOTO   42D
+....................     }
+.................... 
+.................... }
+045A:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F3A   HS NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT
