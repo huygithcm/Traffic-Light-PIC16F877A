@@ -25,6 +25,7 @@ Dự án này triển khai **hệ thống đèn giao thông** sử dụng **vi �
 - **Nguồn điện**: 5V DC  
 
 ---
+## FILE SƠ ĐỒ MẠCH VÀ MẠCH PCB: https://github.com/huygithcm/Traffic-Light-PIC16F877A/blob/main/Mach_den_giao_thong_board_DS1307_chinh_tay_Pic.pdsprj
 
 ## 💻 Cách Hoạt Động
 1️⃣ **Hệ thống khởi động**, Timer1 bắt đầu đếm thời gian.  
